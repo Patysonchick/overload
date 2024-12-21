@@ -1,4 +1,4 @@
-use rand::{thread_rng, Rng};
+use rand::{rng, Rng};
 use std::{
     env,
     fs::{copy, create_dir_all, write},
@@ -17,8 +17,8 @@ async fn random_string(length: usize) -> String {
     (0..length)
         .map(|_| {
             let idx = {
-                let mut rng = thread_rng();
-                rng.gen_range(0..CHARSET.len())
+                let mut rng = rng();
+                rng.random_range(0..CHARSET.len())
             };
             CHARSET[idx] as char
         })
@@ -31,13 +31,11 @@ pub async fn random_file() -> io::Result<()> {
 
     let dir = join_paths(env::var("appdata").expect(""), "overload".to_string());
     create_dir_all(dir.clone())?;
-    println!("Starting generating");
 
     let dir = join_paths(dir, random_string(MAX_PATH_LENGTH).await);
     let body: String = random_string(MAX_TEXT_LENGTH).await;
-    write(dir.clone(), body.clone())?;
+    write(dir, body)?;
 
-    println!("Created file at: {dir}");
     Ok(())
 }
 
